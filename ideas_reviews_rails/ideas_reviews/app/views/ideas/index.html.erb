@@ -1,0 +1,39 @@
+<div class="mb-3 mx-3">
+<% @ideas.each do |i|%>
+
+    
+    
+    <button class="collapsible">+</button>
+        <div class="content">
+        <p><%= i.description %></p>
+        </div>
+    
+    
+    
+    <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var j;
+    
+    for (j = 0; j < coll.length; j++) {
+      coll[j].addEventListener("click", function() {
+        this.classList.toggle("active");
+        <%= link_to(
+        i.title,
+        idea_path(i.id))%>
+        var content = this.nextElementSibling;
+        if (content.style.maxHeight){
+          content.style.maxHeight = null;
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+        } 
+      });
+    }
+    </script>
+
+    <p><%= link_to(
+        i.title,
+        idea_path(i.id))
+    %></p>
+<% end %>
+
+</div>

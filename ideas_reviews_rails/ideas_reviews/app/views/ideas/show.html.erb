@@ -1,0 +1,95 @@
+
+
+<h2><%= @idea.title %></h2>
+<p><%= @idea.description %></p>
+
+<p>By <%= @idea.user&.name || "[Deleted]" %></p>
+
+<div>
+  <small>
+    Posted <%= time_ago_in_words(@idea.created_at) %> ago
+  </small>
+  •
+  <small>
+    Last edited <%= time_ago_in_words(@idea.updated_at) %> ago
+  </small>
+</div>
+
+
+<%if user_signed_in?%>
+    <div>
+        <% if can?(:edit, @idea) %>
+        <small>
+            <%= link_to "Edit", edit_idea_path(@idea)%>
+        </small>
+        <% end %>
+        
+        <% if can?(:delete, @idea) %>
+          <%= link_to(
+            "Delete",
+            idea_path(@idea),
+            method: :delete,
+            data: {
+              confirm: "Are you sure you want to delete this idea?"
+            }) %>
+        <% end %>
+    </div>
+<% end %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Reviews</h2>
+
+<%= form_for [@idea, @review] do |f| %>
+  <% if @review.errors.present? %>
+    <p>
+      <%= @review.errors.full_messages.join(', ') %>
+    </p>
+  <% end %>
+
+  <div>
+    <%= f.text_area(
+      :description, cols: 60, rows: 6,
+      placeholder: "Please submit your reveiws"
+    ) %>
+  </div>
+  <br>
+
+  <%= f.submit "Submit" %>
+<% end %>
+
+<% @reviews.each do |review|%>
+  •
+    <h7><%= review.description %></h7>
+    
+  <% if user_signed_in? && can?(:delete, review) %>
+
+    <small>
+      <%= link_to(
+        "Delete",
+        idea_review_path(@idea,review),
+        method: :delete,
+        data: {
+          confirm: "Are you sure you want to delete this review?"
+        }
+      ) %>
+    </small>
+   
+  <% end %>
+  <br/>
+    <small>
+      Commented <%= time_ago_in_words(review.created_at) %> ago
+    </small>
+    <br/>
+<% end %>
